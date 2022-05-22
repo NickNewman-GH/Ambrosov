@@ -62,7 +62,7 @@ class Weather:
                     self.presipitation='No'
             elif(self.presipitation=='Medium'):
                 if(change_pres<=30):
-                    self.presipitation='Hard'
+                    self.presipitation='High'
                 else:
                     self.presipitation='Low'
             else:
