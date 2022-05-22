@@ -1,2 +1,2 @@
 # Ambrosov
-Just repos
+Just repository
