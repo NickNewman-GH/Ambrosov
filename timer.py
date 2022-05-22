@@ -112,25 +112,3 @@ class Timer:
         result=self.copy()
         result.addTime(sec=timer_2.sec, mins=timer_2.mins, hour=timer_2.hour, day=timer_2.day, month=timer_2.month)
         return result
-        
-        
-    
-#timer=Timer()
-#print(timer)
-#timer.addTime(sec=60,mins=60,hour=24,day=29)
-#print(timer)
-
-timer=Timer(mins=20)
-timer_1=Timer(mins=12)
-timer_1.addTime(sec=1)
-print(timer_1)
-print(timer)
-timer_1=timer+timer_1
-print(timer_1)
-print(timer)
-print(timer_1>timer)
-'''
-while True:
-    timer.addTime(sec=1,day=1)
-    print(timer, end ='\n')
-'''
