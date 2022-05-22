@@ -28,9 +28,7 @@ class Cook(Worker):
     def __init__(self):
         super().__init__()
         self.payment=40000
-        
-    def cooking(self):
-        self.state="Cooking"
+        self.cooking=False
         
 class Administrator(Worker):
     
