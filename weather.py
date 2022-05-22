@@ -10,7 +10,7 @@ class Weather:
     def __init__(self):
         self.temperature=self.temp_states[2]
         self.presipitation=self.pres_states[0]
-        self.next_change=Timer(mins=random.randint(10,59),hour=random.randint(1,2))
+        self.next_change=Timer(min=random.randint(10,59),hour=random.randint(1,2))
         
     def __str__(self):
         result='temperature: '+self.temperature+', presipitation: '+self.presipitation
@@ -69,9 +69,9 @@ class Weather:
                 if(change_pres<=80):
                     self.presipitation='Medium'
             if(mode!='Force'):
-                self.next_change.addTime(mins=random.randint(0,59),hour=5)
+                self.next_change.addTime(min=random.randint(0,59),hour=5)
             else:
-                self.next_change=global_timer.addTime(mins=random.randint(0,59),hour=5)
+                self.next_change=global_timer.addTime(min=random.randint(0,59),hour=5)
         return str(self)
     
     def get_temp(self):
@@ -82,5 +82,3 @@ class Weather:
     
     def get_values(self):
         return(self.temp_states, self.pres_states)
-                
-                        
