@@ -13,7 +13,7 @@ class Client():
         self.visiting_time = None
         self.order_waiting_time = None
         self.temp_preferences = random.choice(Weather.temp_states[1:-1])
-        self.pres_preferences = random.choice(Weather.pres_states)
+        self.max_pres_preferences = random.choice(Weather.pres_states)
         
     def enter_a_place(self, current_time):
         self.visiting_time = current_time
@@ -37,5 +37,9 @@ class Client():
             client.satisfaction += (self.satisfaction - client.satisfaction) * 0.1
 
     def calculate_visiting_prob(self, weather):
-        visiting_prob_base = 0.1
+        visiting_prob_base = 0.05
+
         self.visiting_prob = 0
+
+    def __str__(self) -> str:
+        return f"Temp prefs: {self.temp_preferences}, pres prefs: {self.max_pres_preferences}"
