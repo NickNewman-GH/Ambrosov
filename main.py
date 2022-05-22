@@ -37,6 +37,7 @@ last_month = world.global_timer.month
 last_balance = 0
 count_people = 0
 happines = 0
+happy_recommend_prob = 0.15
 
 while True:
     #print(world.global_timer)
@@ -58,6 +59,19 @@ while True:
         
 
         if world.global_timer.month != last_month:
+            min_sat = min([c.satisfaction for c in potential_clients])
+            max_sat = max([c.satisfaction for c in potential_clients])
+
+            very_happy_clients = [c for c in potential_clients if c.satisfaction > max_sat-max_sat*0.05]
+            very_unhappy_clients = len(potential_clients)
+            
+            potential_clients = [c for c in potential_clients if c.satisfaction > min_sat + min_sat*0.5]
+
+            very_unhappy_clients -= len(potential_clients)
+            
+            potential_clients += [Client() for i in range(len(very_happy_clients)) if random.random() < happy_recommend_prob]
+
+            
             print(world.global_timer)
             print("Profit:", canteen.balance - last_balance)
             print("Balance before: ", canteen.balance)
@@ -65,10 +79,11 @@ while True:
             last_month = world.global_timer.month
             print("Balance after: ", canteen.balance)
             print("Clients per month: ", count_people)
-            happines = sum([c.satisfaction for c in potential_clients]) / count_people
-            print("Happines: ", happines)
-            print("Max sat:", max([c.satisfaction for c in potential_clients]))
-            print("Min sat:", min([c.satisfaction for c in potential_clients]))
+            print("Max sat: ", max_sat)
+            print("Min sat: ", min_sat)
+            print("very happy: ", len(very_happy_clients))
+            print("very unhappy: ", very_unhappy_clients)
+            print(len(potential_clients))
             print()
             count_people = 0
             last_balance = canteen.balance
