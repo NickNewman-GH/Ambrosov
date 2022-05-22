@@ -7,10 +7,10 @@ class Weather:
     #presipitation
     pres_states=['No', 'Low', 'Medium', 'High']
     
-    def __init__(self, startTimer=Timer()):
+    def __init__(self):
         self.temperature=self.temp_states[2]
         self.presipitation=self.pres_states[0]
-        self.next_change=startTimer.addTime(mins=random.randint(10,59),hour=random.randint(1,2))
+        self.next_change=Timer(mins=random.randint(10,59),hour=random.randint(1,2))
         
     def __str__(self):
         result='temperature: '+self.temperature+', presipitation: '+self.presipitation
@@ -84,6 +84,3 @@ class Weather:
         return(self.temp_states, self.pres_states)
                 
                         
-weather=Weather()
-for i in range(30):
-    print(weather.changeWeather(mode='Force'))
