@@ -13,16 +13,17 @@ world = World()
 
 world.change_adder(Timer(min=10))
 
-canteen = Company(capacity=50,potential_clients=500,profit_margin=0.12)
+canteen = Company(capacity=50,potential_clients=500,profit_margin=0.15)
 
 cooks = [Cook() for i in range(5)]
+
+for c in cooks:
+    c.workability=random.randint(6,10)/10
 
 canteen.add_workers(cooks)
 workers = [Casher(),Casher(),Administrator(),Cleaner(),Cleaner()]
 canteen.add_workers(workers)
 
-for w in workers:
-    w.workability=random.randint(6,10)/10
 
 
 expenses = [Expense('water',40000),Expense('Electricity',40000),Expense('Security',50000)]
@@ -33,6 +34,7 @@ canteen.working_hours = [Timer(hour=10),Timer(hour=20)]
 
 
 last_month = world.global_timer.month
+last_balance = 0
 count_people = 0
 happines = 0
 
@@ -45,7 +47,7 @@ while True:
     #print()
     if (canteen.working_hours[0].hour < world.global_timer.hour < canteen.working_hours[1].hour):
         free_potential_clients = [c for c in potential_clients if c.visiting_time == None]
-        new_clients = [c for c in free_potential_clients if random.random()*5 < c.visiting_prob]
+        new_clients = [c for c in free_potential_clients if random.random()*3 < c.visiting_prob]
 
         count_people += len(new_clients)
 
@@ -56,6 +58,8 @@ while True:
         
 
         if world.global_timer.month != last_month:
+            print(world.global_timer)
+            print("Profit:", canteen.balance - last_balance)
             print("Balance before: ", canteen.balance)
             canteen.subtract_montly_loss()
             last_month = world.global_timer.month
@@ -63,7 +67,11 @@ while True:
             print("Clients per month: ", count_people)
             happines = sum([c.satisfaction for c in potential_clients]) / count_people
             print("Happines: ", happines)
+            print("Max sat:", max([c.satisfaction for c in potential_clients]))
+            print("Min sat:", min([c.satisfaction for c in potential_clients]))
+            print()
             count_people = 0
+            last_balance = canteen.balance
             
               
         for p in potential_clients:
