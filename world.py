@@ -4,9 +4,8 @@ from weather import Weather
 
 class World:
     
-    adder=Timer(mins=10)
-    
     def __init__(self):
+        self.adder = Timer(min=1)
         self.global_timer=Timer()
         self.global_weather=Weather()
         
@@ -19,6 +18,9 @@ class World:
     
     def get_global_timer(self):
         return self.global_timer.copy()
+
+    def change_adder(self, new_add):
+        self.adder = new_add
     
 if __name__=='__main__':   
     my_world=World()

@@ -22,7 +22,7 @@ class Client():
         self.state = "Waiting for order"
 
     def exit_a_place(self, is_order_done):
-        self.change_satisfaction(self, is_order_done)
+        self.change_satisfaction(is_order_done)
         self.visiting_time = None
         self.order_waiting_time = None
         self.eating_time = None
