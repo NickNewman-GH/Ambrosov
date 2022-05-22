@@ -37,15 +37,14 @@ last_month = world.global_timer.month
 last_balance = 0
 count_people = 0
 happines = 0
-happy_recommend_prob = 0.15
+happy_recommend_prob = 0.2
+
+consecutive_client_decrease = 0
+consecutive_client_decrease_thresh = 3
+
 
 while True:
-    #print(world.global_timer)
-    #print("Clients waiting: ",len(canteen.clients))
-    #print("Clients being served: ", len(canteen.being_cooked))
-    #print("Clients eating: ", len(canteen.eating))
-    #print("Balance: ", canteen.balance)
-    #print()
+
     if (canteen.working_hours[0].hour < world.global_timer.hour < canteen.working_hours[1].hour):
         free_potential_clients = [c for c in potential_clients if c.visiting_time == None]
         new_clients = [c for c in free_potential_clients if random.random()*3 < c.visiting_prob]
@@ -62,17 +61,35 @@ while True:
             min_sat = min([c.satisfaction for c in potential_clients])
             max_sat = max([c.satisfaction for c in potential_clients])
 
-            very_happy_clients = [c for c in potential_clients if c.satisfaction > max_sat-max_sat*0.05]
+            very_happy_clients = [c for c in potential_clients if c.satisfaction > 0.92]
             very_unhappy_clients = len(potential_clients)
+
+            last_clients_num = len(potential_clients)
             
-            potential_clients = [c for c in potential_clients if c.satisfaction > min_sat + min_sat*0.5]
+            potential_clients = [c for c in potential_clients if c.satisfaction > 0.3]
 
             very_unhappy_clients -= len(potential_clients)
             
             potential_clients += [Client() for i in range(len(very_happy_clients)) if random.random() < happy_recommend_prob]
 
+            cur_clients_num = len(potential_clients)
+
+            if (last_clients_num > cur_clients_num):
+                consecutive_client_decrease += 1
+
+            if (consecutive_client_decrease >= consecutive_client_decrease_thresh):
+                mean_workability = sum([c.workability for c in cooks])/len(cooks)
+
+                cooks_to_fire = [c for c in cooks if c.workability < mean_workability]
+
+                for cook in cooks_to_fire:
+                    cook.workability = random.randint(6,10)/10
+
+                consecutive_client_decrease = 0
+                    
+
             
-            print(world.global_timer)
+           print(world.global_timer)
             print("Profit:", canteen.balance - last_balance)
             print("Balance before: ", canteen.balance)
             canteen.subtract_montly_loss()
@@ -88,6 +105,7 @@ while True:
             count_people = 0
             last_balance = canteen.balance
             
+
               
         for p in potential_clients:
             p.calculate_visiting_prob(world.global_weather)

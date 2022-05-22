@@ -74,13 +74,15 @@ class Company:
     def serve_orders(self,time):
         remaining_orders = []
         for order in self.being_cooked:
-
-            if time >= order[0].order_waiting_time + order[0].visiting_time:
-                order[1].cooking = False
-                if order[1].workability >= random.random():
-                    self.eating.append(order[0])
+            client = order[0]
+            cook = order[1]
+            if time >= client.order_waiting_time + client.visiting_time:
+                cook.cooking = False
+                if cook.workability >= random.random():
+                    self.eating.append(order)
                 else:
-                    order[0].exit_a_place(False)
+                    is_mistake = (1 - cook.workability)/10 >= random.random()
+                    client.exit_a_place(False, is_mistake)
             else:
                 remaining_orders.append(order)
                     
@@ -89,13 +91,15 @@ class Company:
                 
     def remove_clients(self,time):
         remaining_clients = []
-        for client in self.eating:
-
+        for order in self.eating:
+            client = order[0]
+            cook = order[1]
             if time > client.visiting_time + client.order_waiting_time + client.eating_time:
+                is_mistake = (1 - cook.workability)/10 >= random.random()
                 self.balance += client.avg_check * self.profit_margin
-                client.exit_a_place(True)
+                client.exit_a_place(True, is_mistake)
             else:
-                remaining_clients.append(client)
+                remaining_clients.append(order)
 
         self.eating = remaining_clients
 
