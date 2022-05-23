@@ -52,6 +52,7 @@ client_num = []
 
 min_sat_arr = []
 max_sat_arr = []
+avg_sat_arr = []
 
 x = 0
 x_vals = []
@@ -78,6 +79,7 @@ while True:
             
             max_sat_arr.append(max_sat)
             min_sat_arr.append(min_sat)
+            avg_sat_arr.append(sum([c.satisfaction for c in potential_clients])/len(potential_clients))
             last_week += Timer(day=7)
             x_vals.append(x)
             x+=1
@@ -148,8 +150,9 @@ while True:
             
             ax1.plot(x_vals,max_sat_arr, linestyle="--")
             ax1.plot(x_vals,min_sat_arr, linestyle="--")
+            ax1.plot(x_vals,avg_sat_arr, linestyle="--")
 
-            ax1.legend(["Max sat","Min sat"])
+            ax1.legend(["Max sat","Min sat","Avg sat"])
             ax1.set_xlabel("Weeks")
             ax1.set_ylabel("Values")
 
