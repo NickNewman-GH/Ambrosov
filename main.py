@@ -1,5 +1,7 @@
 import random
 import time
+import matplotlib.pyplot as plt
+import matplotlib.animation as animation
 
 from timer import Timer
 from company import Company
@@ -43,6 +45,20 @@ consecutive_client_decrease = 0
 consecutive_client_decrease_thresh = 3
 
 
+#arrays for plots
+
+profit = []
+client_num = []
+
+min_sat_arr = []
+max_sat_arr = []
+
+x = 0
+x_vals = []
+
+last_week = Timer(day=0)
+last_year = 0
+
 while True:
 
     if (canteen.working_hours[0].hour < world.global_timer.hour < canteen.working_hours[1].hour):
@@ -55,6 +71,18 @@ while True:
         canteen.cook_orders()
         canteen.serve_orders(world.global_timer)
         canteen.remove_clients(world.global_timer)
+
+        if (last_week + Timer(day=7)).day == world.global_timer.day:
+            min_sat = min([c.satisfaction for c in potential_clients])
+            max_sat = max([c.satisfaction for c in potential_clients])
+            
+            max_sat_arr.append(max_sat)
+            min_sat_arr.append(min_sat)
+            last_week += Timer(day=7)
+            x_vals.append(x)
+            x+=1
+            
+
         
 
         if world.global_timer.month != last_month:
@@ -86,15 +114,17 @@ while True:
                     cook.workability = random.randint(6,10)/10
 
                 consecutive_client_decrease = 0
+
+            client_num.append(cur_clients_num)
                     
 
             
-           print(world.global_timer)
-            print("Profit:", canteen.balance - last_balance)
+            print(world.global_timer)
             print("Balance before: ", canteen.balance)
             canteen.subtract_montly_loss()
             last_month = world.global_timer.month
             print("Balance after: ", canteen.balance)
+            print("Profit:", canteen.balance - last_balance)
             print("Clients per month: ", count_people)
             print("Max sat: ", max_sat)
             print("Min sat: ", min_sat)
@@ -102,8 +132,43 @@ while True:
             print("very unhappy: ", very_unhappy_clients)
             print(len(potential_clients))
             print()
+
+            profit.append(canteen.balance - last_balance)
+            
             count_people = 0
             last_balance = canteen.balance
+
+
+        if (world.global_timer.month + 1) % 12 == 0 and last_year != (world.global_timer.month + 1) // 12 :
+            fig = plt.figure()
+            ax1 = fig.add_subplot(1, 3, 1)
+            ax2 = fig.add_subplot(1, 3, 2)
+            ax3 = fig.add_subplot(1, 3, 3)
+            ax1.clear()
+            
+            ax1.plot(x_vals,max_sat_arr, linestyle="--")
+            ax1.plot(x_vals,min_sat_arr, linestyle="--")
+
+            ax1.legend(["Max sat","Min sat"])
+            ax1.set_xlabel("Weeks")
+            ax1.set_ylabel("Values")
+
+
+            ax2.clear()
+            ax2.plot([i for i in range(len(client_num))],client_num)
+            ax2.legend(["client num"])
+            ax2.set_xlabel("Months")
+            ax2.set_ylabel("Values")
+
+            ax3.clear()
+            ax3.plot([i for i in range(len(profit))],profit)
+            ax3.legend(["profit"])
+            ax3.set_xlabel("Months")
+            ax3.set_ylabel("Values")
+            
+            plt.show()
+
+            last_year = (world.global_timer.month + 1) // 12
             
 
               
